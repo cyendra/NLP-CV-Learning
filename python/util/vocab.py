@@ -1,4 +1,4 @@
-# encode='utf-8'
+# coding=utf-8
 import time
 import pickle
 
@@ -8,6 +8,7 @@ class Vocab:
                     , '<CLS>' : 3, '<SEP>' : 4, '<PAD>' : 5
                     , '<MASK>' : 6, '<EOD>' : 7, '<S>' : 8
                     , '</S>' : 9}
+        self._idx = dict(map(lambda x:(x[1], x[0]), self._vocab.items()) )
         self._count = 100
         
         create_date = time.strftime("%Y.%m.%d %H:%M:%S", time.localtime()) 
@@ -34,6 +35,7 @@ class Vocab:
         with open(file_path, 'rb') as f:
             data = pickle.load(f)
             self._vocab = data._vocab
+            self._idx = data._idx
             self._meta = data._meta
             self._count = data._count
     
@@ -57,6 +59,7 @@ class Vocab:
     def add(self, word, need_refresh=True):
         if word not in self._vocab:
             self._vocab[word] = self._count
+            self._idx[self._count] = word
             self._count += 1
             self.refresh(need_refresh)
     
